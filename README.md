@@ -1,1 +1,1 @@
-# lmc-web
+# comp-web
