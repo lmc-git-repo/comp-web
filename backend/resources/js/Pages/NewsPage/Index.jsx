@@ -24,6 +24,9 @@ const NewsPageIndex = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // ⭐ ADD SEARCH STATE
+  const [searchTerm, setSearchTerm] = useState("");
+
   const role = localStorage.getItem("user_role");
   const isAdmin = role === "admin" || role === "super admin";
 
@@ -73,29 +76,57 @@ const NewsPageIndex = () => {
     handleCloseDelete();
   };
 
+  // ⭐ FILTER ANNOUNCEMENTS (ONLY CHANGE IN LOGIC)
+  const filteredAnnouncements = announcements.filter((post) => {
+    const search = searchTerm.toLowerCase();
+    return (
+      post.title.toLowerCase().includes(search) ||
+      post.content.toLowerCase().includes(search)
+    );
+  });
+
   return (
     <>
       <Container className="mt-5 mb-5">
         <Row className="justify-content-center">
           <Col md={10}>
-            <h2 className="section-title mb-4"
-            style={{ fontSize: "2.5rem" }}
+            <h2
+              className="section-title mb-4"
+              style={{ fontSize: "2.5rem" }}
             >
               ANNOUNCEMENT BOARD
             </h2>
+
+            {/* ⭐ SEARCH BAR (added) */}
+            <div className="d-flex justify-content-center mb-4">
+              <input
+                type="text"
+                placeholder="Search announcements..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="form-control"
+                style={{
+                  maxWidth: "400px",
+                  padding: "10px 14px",
+                  borderRadius: "8px",
+                  border: "1px solid #ccd",
+                  fontSize: "1rem",
+                }}
+              />
+            </div>
+
             {loading && (
               <div className="text-center py-5">
                 <Spinner animation="border" />
               </div>
             )}
 
-            {!loading && announcements.length > 0 ? (
-              announcements.map((post) => (
+            {!loading && filteredAnnouncements.length > 0 ? (
+              filteredAnnouncements.map((post) => (
                 <div key={post.id} className="about-box-frame post-card-hover mb-4">
                   <div className="about-box-topline"></div>
 
                   <div className="p-4">
-
                     <h3
                       className="fw-bold mb-2"
                       style={{
@@ -127,9 +158,7 @@ const NewsPageIndex = () => {
                     </small>
 
                     {isAdmin && (
-                      <div
-                        className="d-flex justify-content-end gap-2 mt-3"
-                      >
+                      <div className="d-flex justify-content-end gap-2 mt-3">
                         <Button
                           variant="outline-secondary"
                           size="sm"
@@ -185,11 +214,8 @@ const NewsPageIndex = () => {
 
       {/* Delete Modal */}
       <Modal show={showDeleteModal} onHide={handleCloseDelete} centered>
-        <Modal.Header 
-          closeButton 
-          className="border-0 pb-0"
-        >
-          <Modal.Title 
+        <Modal.Header closeButton className="border-0 pb-0">
+          <Modal.Title
             style={{
               fontWeight: "700",
               fontSize: "1.4rem",
@@ -200,19 +226,16 @@ const NewsPageIndex = () => {
           </Modal.Title>
         </Modal.Header>
 
-        <Modal.Body 
+        <Modal.Body
           className="pt-2 pb-3"
           style={{ fontSize: "1.05rem", color: "#333" }}
         >
           <p className="mb-1">
-            Are you sure you want to permanently delete this
-            announcement?
+            Are you sure you want to permanently delete this announcement?
           </p>
         </Modal.Body>
 
         <Modal.Footer className="border-0 pt-0 d-flex justify-content-end gap-2">
-
-          {/* CANCEL button */}
           <Button
             variant="secondary"
             onClick={handleCloseDelete}
@@ -236,7 +259,6 @@ const NewsPageIndex = () => {
             Cancel
           </Button>
 
-          {/* DELETE button */}
           <Button
             variant="danger"
             onClick={handleDeleteConfirmed}
@@ -249,7 +271,7 @@ const NewsPageIndex = () => {
               transition: "0.2s ease",
             }}
             onMouseEnter={(e) => {
-              e.target.style.backgroundColor = "#c82333"; // deeper red
+              e.target.style.backgroundColor = "#c82333";
               e.target.style.borderColor = "#bd2130";
             }}
             onMouseLeave={(e) => {
@@ -259,7 +281,6 @@ const NewsPageIndex = () => {
           >
             Delete Permanently
           </Button>
-
         </Modal.Footer>
       </Modal>
     </>
