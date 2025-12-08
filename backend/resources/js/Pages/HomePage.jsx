@@ -5,7 +5,7 @@ import api from "../api/axios";
 
 const SLIDESHOW_IMAGES = [
     "/images/bg.JPG",
-    "/images/bg2.JPG",
+    "/images/bg2.jpg",
     "/images/bg3.JPG"
 ];
 
