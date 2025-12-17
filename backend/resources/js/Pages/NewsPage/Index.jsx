@@ -24,7 +24,7 @@ const NewsPageIndex = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ⭐ ADD SEARCH STATE
+  // ⭐ SEARCH STATE
   const [searchTerm, setSearchTerm] = useState("");
 
   const role = localStorage.getItem("user_role");
@@ -76,13 +76,13 @@ const NewsPageIndex = () => {
     handleCloseDelete();
   };
 
-  // ⭐ FILTER ANNOUNCEMENTS (ONLY CHANGE IN LOGIC)
+  // ✅ FIXED: SAFE SEARCH FILTER (NO CRASH)
   const filteredAnnouncements = announcements.filter((post) => {
-    const search = searchTerm.toLowerCase();
-    return (
-      post.title.toLowerCase().includes(search) ||
-      post.content.toLowerCase().includes(search)
-    );
+    const search = (searchTerm || "").toLowerCase();
+    const title = (post.title || "").toLowerCase();
+    const content = (post.content || "").toLowerCase();
+
+    return title.includes(search) || content.includes(search);
   });
 
   return (
@@ -97,7 +97,7 @@ const NewsPageIndex = () => {
               ANNOUNCEMENT BOARD
             </h2>
 
-            {/* ⭐ SEARCH BAR (added) */}
+            {/* SEARCH BAR */}
             <div className="d-flex justify-content-center mb-4">
               <input
                 type="text"
@@ -123,7 +123,10 @@ const NewsPageIndex = () => {
 
             {!loading && filteredAnnouncements.length > 0 ? (
               filteredAnnouncements.map((post) => (
-                <div key={post.id} className="about-box-frame post-card-hover mb-4">
+                <div
+                  key={post.id}
+                  className="about-box-frame post-card-hover mb-4"
+                >
                   <div className="about-box-topline"></div>
 
                   <div className="p-4">
@@ -137,7 +140,10 @@ const NewsPageIndex = () => {
                     >
                       <Link
                         to={`/news/view/${post.id}`}
-                        style={{ textDecoration: "none", color: HEADER_BLUE }}
+                        style={{
+                          textDecoration: "none",
+                          color: HEADER_BLUE,
+                        }}
                       >
                         {post.title}
                       </Link>
@@ -174,8 +180,10 @@ const NewsPageIndex = () => {
                         <Button
                           variant="danger"
                           size="sm"
-                          className="delete-btn"
-                          style={{ backgroundColor: ACCENT_RED, borderColor: ACCENT_RED }}
+                          style={{
+                            backgroundColor: ACCENT_RED,
+                            borderColor: ACCENT_RED,
+                          }}
                           onClick={() => handleShowDelete(post.id)}
                         >
                           Delete
@@ -193,7 +201,7 @@ const NewsPageIndex = () => {
               )
             )}
 
-            {/* FLOATING ADD BUTTON (ADMIN ONLY) */}
+            {/* FLOATING ADD BUTTON */}
             {isAdmin && (
               <button
                 className="fab-add-button"
@@ -212,7 +220,7 @@ const NewsPageIndex = () => {
         onPostSuccess={handlePostSuccess}
       />
 
-      {/* Delete Modal */}
+      {/* DELETE MODAL */}
       <Modal show={showDeleteModal} onHide={handleCloseDelete} centered>
         <Modal.Header closeButton className="border-0 pb-0">
           <Modal.Title
@@ -226,57 +234,20 @@ const NewsPageIndex = () => {
           </Modal.Title>
         </Modal.Header>
 
-        <Modal.Body
-          className="pt-2 pb-3"
-          style={{ fontSize: "1.05rem", color: "#333" }}
-        >
-          <p className="mb-1">
-            Are you sure you want to permanently delete this announcement?
-          </p>
+        <Modal.Body className="pt-2 pb-3">
+          Are you sure you want to permanently delete this announcement?
         </Modal.Body>
 
         <Modal.Footer className="border-0 pt-0 d-flex justify-content-end gap-2">
-          <Button
-            variant="secondary"
-            onClick={handleCloseDelete}
-            style={{
-              backgroundColor: "#6c757d",
-              borderColor: "#6c757d",
-              fontWeight: 600,
-              padding: "6px 18px",
-              borderRadius: "6px",
-              transition: "0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.backgroundColor = "#5a6268";
-              e.target.style.borderColor = "#545b62";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.backgroundColor = "#6c757d";
-              e.target.style.borderColor = "#6c757d";
-            }}
-          >
+          <Button variant="secondary" onClick={handleCloseDelete}>
             Cancel
           </Button>
-
           <Button
             variant="danger"
             onClick={handleDeleteConfirmed}
             style={{
               backgroundColor: ACCENT_RED,
               borderColor: ACCENT_RED,
-              fontWeight: 700,
-              padding: "6px 18px",
-              borderRadius: "6px",
-              transition: "0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.backgroundColor = "#c82333";
-              e.target.style.borderColor = "#bd2130";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.backgroundColor = ACCENT_RED;
-              e.target.style.borderColor = ACCENT_RED;
             }}
           >
             Delete Permanently
