@@ -16,6 +16,16 @@ const Footer = () => {
                 <p className="mb-0 small">
                     &copy; {new Date().getFullYear()} LAGUNA METTS CORPORATION. All rights reserved.
                 </p>
+
+                {/* INSERTED */}
+                <p className="mb-0 small">
+                    Website developed by LMC IT Team
+                </p>
+
+                {/* INSERTED */}
+                <p className="mb-0 footer-credit">
+                    Lead Developer: Liezel Larracas
+                </p>
             </div>
         </footer>
     );
