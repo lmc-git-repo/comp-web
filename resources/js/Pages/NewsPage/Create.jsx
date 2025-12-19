@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Modal, Form, Button, Alert } from "react-bootstrap";
 import api from "../../api/axios";
 
+const COMPANY_BLUE = "#004d99";
+
 export default function CreateAnnouncementModal({
   show,
   handleClose,
@@ -41,7 +43,9 @@ export default function CreateAnnouncementModal({
 
       const res = await api.post("/announcements", formData);
 
-      onPostSuccess(res.data);
+      // ✅ FIX: USE ACTUAL ANNOUNCEMENT OBJECT
+      onPostSuccess(res.data.data);
+
       setPostTitle("");
       setPostContent("");
       setSelectedFiles([]);
@@ -61,12 +65,12 @@ export default function CreateAnnouncementModal({
       centered
       dialogClassName="post-announcement-modal"
     >
-      <div className="edit-announcement-card">
-        <div className="edit-announcement-topline"></div>
+      <div className="post-announcement-wrapper">
+        <div className="edit-announcement-card">
+          <div className="edit-announcement-topline"></div>
 
-        <h2 className="edit-title">Post Announcement</h2>
+          <h2 className="edit-title">POST ANNOUNCEMENT</h2>
 
-        <div className="post-announcement-body">
           {error && <Alert variant="danger">{error}</Alert>}
 
           <Form onSubmit={handleSubmit}>
@@ -104,19 +108,18 @@ export default function CreateAnnouncementModal({
               />
             </Form.Group>
 
-            <div className="edit-buttons-row d-flex justify-content-end gap-3">
-              <Button
-                variant="secondary"
-                onClick={handleClose}
-                disabled={loading}
-              >
+            <div className="edit-buttons-row d-flex justify-content-between">
+              <Button variant="secondary" onClick={handleClose}>
                 Cancel
               </Button>
 
               <Button
                 type="submit"
                 disabled={loading}
-                className="btn-primary"
+                style={{
+                  backgroundColor: COMPANY_BLUE,
+                  borderColor: COMPANY_BLUE,
+                }}
               >
                 {loading ? "Processing..." : "Save"}
               </Button>

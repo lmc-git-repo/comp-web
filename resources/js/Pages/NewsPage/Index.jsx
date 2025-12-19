@@ -24,7 +24,6 @@ const NewsPageIndex = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ⭐ SEARCH STATE
   const [searchTerm, setSearchTerm] = useState("");
 
   const role = localStorage.getItem("user_role");
@@ -46,8 +45,9 @@ const NewsPageIndex = () => {
     loadAnnouncements();
   }, []);
 
-  const handlePostSuccess = (newPost) => {
-    setAnnouncements((prev) => [newPost, ...prev]);
+  // ✅ FIX: RELOAD DATA AFTER CREATE
+  const handlePostSuccess = () => {
+    loadAnnouncements();
     setShowCreateModal(false);
   };
 
@@ -66,9 +66,7 @@ const NewsPageIndex = () => {
 
     try {
       await api.delete(`/announcements/${postToDeleteId}`);
-      setAnnouncements((prev) =>
-        prev.filter((post) => post.id !== postToDeleteId)
-      );
+      loadAnnouncements();
     } catch (err) {
       console.error("Failed to delete announcement:", err);
     }
@@ -76,7 +74,6 @@ const NewsPageIndex = () => {
     handleCloseDelete();
   };
 
-  // ✅ FIXED: SAFE SEARCH FILTER (NO CRASH)
   const filteredAnnouncements = announcements.filter((post) => {
     const search = (searchTerm || "").toLowerCase();
     const title = (post.title || "").toLowerCase();
@@ -90,14 +87,10 @@ const NewsPageIndex = () => {
       <Container className="mt-5 mb-5">
         <Row className="justify-content-center">
           <Col md={10}>
-            <h2
-              className="section-title mb-4"
-              style={{ fontSize: "2.5rem" }}
-            >
+            <h2 className="section-title mb-4" style={{ fontSize: "2.5rem" }}>
               ANNOUNCEMENT BOARD
             </h2>
 
-            {/* SEARCH BAR */}
             <div className="d-flex justify-content-center mb-4">
               <input
                 type="text"
@@ -170,21 +163,17 @@ const NewsPageIndex = () => {
                           size="sm"
                           as={Link}
                           to={`/news/edit/${post.id}`}
-                          style={{
-                            padding: "6px 16px",
-                            fontWeight: "600",
-                          }}
                         >
                           Edit
                         </Button>
                         <Button
                           variant="danger"
                           size="sm"
+                          onClick={() => handleShowDelete(post.id)}
                           style={{
                             backgroundColor: ACCENT_RED,
                             borderColor: ACCENT_RED,
                           }}
-                          onClick={() => handleShowDelete(post.id)}
                         >
                           Delete
                         </Button>
@@ -201,7 +190,6 @@ const NewsPageIndex = () => {
               )
             )}
 
-            {/* FLOATING ADD BUTTON */}
             {isAdmin && (
               <button
                 className="fab-add-button"
@@ -220,36 +208,18 @@ const NewsPageIndex = () => {
         onPostSuccess={handlePostSuccess}
       />
 
-      {/* DELETE MODAL */}
       <Modal show={showDeleteModal} onHide={handleCloseDelete} centered>
-        <Modal.Header closeButton className="border-0 pb-0">
-          <Modal.Title
-            style={{
-              fontWeight: "700",
-              fontSize: "1.4rem",
-              color: HEADER_BLUE,
-            }}
-          >
-            Confirm Deletion
-          </Modal.Title>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>
-
-        <Modal.Body className="pt-2 pb-3">
+        <Modal.Body>
           Are you sure you want to permanently delete this announcement?
         </Modal.Body>
-
-        <Modal.Footer className="border-0 pt-0 d-flex justify-content-end gap-2">
+        <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseDelete}>
             Cancel
           </Button>
-          <Button
-            variant="danger"
-            onClick={handleDeleteConfirmed}
-            style={{
-              backgroundColor: ACCENT_RED,
-              borderColor: ACCENT_RED,
-            }}
-          >
+          <Button variant="danger" onClick={handleDeleteConfirmed}>
             Delete Permanently
           </Button>
         </Modal.Footer>

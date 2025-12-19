@@ -46,18 +46,17 @@ class AnnouncementController extends Controller
         return response()->json($post);
     }
 
-    // ===============================
-    // CREATE ANNOUNCEMENT
-    // ===============================
-    public function store(Request $request)
+        // ===============================
+        // CREATE ANNOUNCEMENT
+        // ===============================
+        public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title'   => 'required|string|max:255',
             'content' => 'required|string',
 
-            // MUST MATCH FRONTEND: attachments[]
-            'attachments' => 'nullable|array',
-            'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf|max:10240', // 10MB
+            // ✅ FIX: DO NOT force array on multipart uploads
+            'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf|max:10240',
         ]);
 
         $announcement = Announcement::create([
@@ -92,6 +91,7 @@ class AnnouncementController extends Controller
             'data' => $announcement,
         ], 201);
     }
+
 
     // ===============================
     // UPDATE ANNOUNCEMENT
