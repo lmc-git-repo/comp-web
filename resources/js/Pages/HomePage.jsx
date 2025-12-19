@@ -9,11 +9,6 @@ const SLIDESHOW_IMAGES = [
     "/images/bg3.JPG"
 ];
 
-const VISION_IMAGE_SRC = "/images/Metts Group 2030 Vision.png";
-const VALUES_IMAGE_SRC = "/images/corporate values.png";
-
-const NAVBAR_BLUE = "#002C82";
-
 const formatDate = (dateString) => {
     if (!dateString) return "";
     return new Intl.DateTimeFormat("en-US", {
@@ -55,19 +50,12 @@ const HomePage = () => {
             {/* SLIDESHOW */}
             <Row className="mx-0 px-0">
                 <Col xs={12} className="p-0">
-                    <Carousel
-                        controls={false}
-                        indicators={false}
-                        interval={2500}
-                        fade
-                        className="home-hero-carousel"
-                    >
+                    <Carousel controls={false} indicators={false} interval={2500} fade>
                         {SLIDESHOW_IMAGES.map((img, index) => (
                             <Carousel.Item key={index}>
                                 <div className="home-hero-image-wrapper">
                                     <img
                                         src={img}
-                                        loading="lazy"
                                         alt="LMC slideshow"
                                         className={`home-hero-image slide-${index + 1}`}
                                     />
@@ -78,22 +66,69 @@ const HomePage = () => {
                 </Col>
             </Row>
 
-            {/* CONTENT AREA */}
-            <div style={{ width: "100%", backgroundColor: "white", paddingTop: "40px", paddingBottom: "60px" }}>
+            {/* CONTENT */}
+            <div style={{ backgroundColor: "white", paddingTop: "40px", paddingBottom: "60px" }}>
                 <div style={{ maxWidth: "1500px", margin: "0 auto", padding: "0 20px" }}>
+
+                    {/* COMPANY NEWS UPDATE */}
+                    <div className="home-news-wrapper">
+                        <Row className="justify-content-center">
+                            <Col md={10} className="text-center">
+                                <h2 className="news-title">COMPANY NEWS UPDATE</h2>
+
+                                {loading && <p className="text-muted">Loading latest news…</p>}
+                                {!loading && !latestPost && <p className="text-muted">No announcements available.</p>}
+
+                                {!loading && latestPost && (
+                                    <>
+                                        <h3 className="fw-bold news-article-title">
+                                            {latestPost.title}
+                                        </h3>
+                                        <p className="news-subtitle">
+                                            Posted on {formatDate(latestPost.posted_at)}
+                                        </p>
+                                        <p className="news-excerpt">
+                                            {getExcerpt(latestPost.content)}
+                                        </p>
+                                        <Link
+                                            to={`/news/view/${latestPost.id}`}
+                                            className="news-readmore"
+                                        >
+                                            [Read more →]
+                                        </Link>
+                                    </>
+                                )}
+                            </Col>
+                        </Row>
+                    </div>
 
                     {/* CORPORATE POLICY & VISION */}
                     <Row className="justify-content-center mt-4 mb-4">
                         <Col md={10}>
-                            <div className="about-box-frame text-center">
+                            <div className="about-box-frame">
                                 <div className="about-box-topline"></div>
                                 <div className="about-box-title">CORPORATE POLICY & VISION</div>
-                                <img
-                                    src={VISION_IMAGE_SRC}
-                                    loading="lazy"
-                                    alt="Corporate Vision"
-                                    className="about-box-image"
-                                />
+
+                                <p className="company-paragraph">
+                                    <strong>1.</strong>
+                                    Be a leader of light alloy technology and become a company that global
+                                    customers always want to exist.
+                                </p>
+
+                                <p className="company-paragraph">
+                                    <strong>1.1</strong>
+                                    Always stay as an advanced company in fields of light alloy business.
+                                </p>
+
+                                <p className="company-paragraph">
+                                    <strong>1.2</strong>
+                                    Become a collaborative partner that can propose value anywhere, anytime.
+                                </p>
+
+                                <p className="company-paragraph">
+                                    <strong>1.3</strong>
+                                    Become a global company that is strong and flexible against changes of environment.
+                                </p>
                             </div>
                         </Col>
                     </Row>
@@ -101,61 +136,43 @@ const HomePage = () => {
                     {/* CORPORATE VALUES */}
                     <Row className="justify-content-center mb-4">
                         <Col md={10}>
-                            <div className="about-box-frame text-center">
+                            <div className="about-box-frame">
                                 <div className="about-box-topline"></div>
                                 <div className="about-box-title">CORPORATE VALUES</div>
-                                <img
-                                    src={VALUES_IMAGE_SRC}
-                                    loading="lazy"
-                                    alt="Corporate Values"
-                                    className="about-box-image"
-                                />
+
+                                <p className="company-paragraph">
+                                    <strong>Customer Satisfaction</strong>
+                                    Deliver products and services that meet the requirements of internal
+                                    and external customers by putting customer value first.
+                                </p>
+
+                                <p className="company-paragraph">
+                                    <strong>Teamwork</strong>
+                                    Working together harmoniously to achieve beyond our common goal.
+                                </p>
+
+                                <p className="company-paragraph">
+                                    <strong>Quality</strong>
+                                    Give the best effort to achieve excellent results by doing the right thing.
+                                </p>
+
+                                <p className="company-paragraph">
+                                    <strong>Professionalism</strong>
+                                    Act in accordance with corporate governance and globally acceptable work ethics.
+                                </p>
+
+                                <p className="company-paragraph">
+                                    <strong>Constant Improvement</strong>
+                                    Continuously making efficient work improvement.
+                                </p>
                             </div>
                         </Col>
                     </Row>
 
                 </div>
 
-                {/* DIVIDER */}
                 <div className="home-divider"></div>
-
-                {/* NEWS */}
-                <div className="home-news-wrapper" style={{ maxWidth: "1500px", margin: "0 auto" }}>
-                    <Row className="justify-content-center">
-                        <Col md={10} className="text-center">
-
-                            <h2 className="news-title">COMPANY NEWS UPDATE</h2>
-
-                            {loading && <p className="text-muted">Loading latest news…</p>}
-                            {!loading && !latestPost && <p className="text-muted">No announcements available.</p>}
-
-                            {!loading && latestPost && (
-                                <>
-                                    <h3 className="fw-bold news-article-title" style={{ color: "#000" }}>
-                                        {latestPost.title}
-                                    </h3>
-
-                                    <p className="news-subtitle">
-                                        Posted on {formatDate(latestPost.posted_at)}
-                                    </p>
-
-                                    <p className="news-excerpt">{getExcerpt(latestPost.content)}</p>
-
-                                    <Link
-                                        to={`/news/view/${latestPost.id}`}
-                                        className="news-readmore"
-                                        style={{ fontStyle: "italic" }}
-                                    >
-                                        [Read more →]
-                                    </Link>
-                                </>
-                            )}
-                        </Col>
-                    </Row>
-                </div>
-
             </div>
-
         </Container>
     );
 };
