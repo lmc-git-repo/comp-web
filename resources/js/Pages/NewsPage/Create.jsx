@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { Modal, Form, Button, Alert } from "react-bootstrap";
 import api from "../../api/axios";
 
-const COMPANY_BLUE = "#004d99";
-
 export default function CreateAnnouncementModal({
   show,
   handleClose,
@@ -35,7 +33,6 @@ export default function CreateAnnouncementModal({
       formData.append("title", postTitle);
       formData.append("content", postContent);
 
-      // ✅ MUST MATCH BACKEND: attachments[]
       selectedFiles.forEach((file) => {
         if (file instanceof File) {
           formData.append("attachments[]", file);
@@ -45,7 +42,6 @@ export default function CreateAnnouncementModal({
       const res = await api.post("/announcements", formData);
 
       onPostSuccess(res.data);
-
       setPostTitle("");
       setPostContent("");
       setSelectedFiles([]);
@@ -59,61 +55,75 @@ export default function CreateAnnouncementModal({
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered size="lg">
-      <Modal.Body>
-        <h4 className="mb-4 text-center">Post Announcement</h4>
+    <Modal
+      show={show}
+      onHide={handleClose}
+      centered
+      dialogClassName="post-announcement-modal"
+    >
+      <div className="edit-announcement-card">
+        <div className="edit-announcement-topline"></div>
 
-        {error && <Alert variant="danger">{error}</Alert>}
+        <h2 className="edit-title">Post Announcement</h2>
 
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label>Announcement Title</Form.Label>
-            <Form.Control
-              type="text"
-              value={postTitle}
-              onChange={(e) => setPostTitle(e.target.value)}
-              disabled={loading}
-              required
-            />
-          </Form.Group>
+        <div className="post-announcement-body">
+          {error && <Alert variant="danger">{error}</Alert>}
 
-          <Form.Group className="mb-3">
-            <Form.Label>Announcement Content</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={6}
-              value={postContent}
-              onChange={(e) => setPostContent(e.target.value)}
-              disabled={loading}
-              required
-            />
-          </Form.Group>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-4">
+              <Form.Label>Announcement Title</Form.Label>
+              <Form.Control
+                type="text"
+                value={postTitle}
+                onChange={(e) => setPostTitle(e.target.value)}
+                disabled={loading}
+                required
+              />
+            </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Upload Photos / PDF (optional)</Form.Label>
-            <Form.Control
-              type="file"
-              multiple
-              accept="image/*,application/pdf"
-              onChange={handleFileChange}
-              disabled={loading}
-            />
-          </Form.Group>
+            <Form.Group className="mb-4">
+              <Form.Label>Announcement Content</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={6}
+                value={postContent}
+                onChange={(e) => setPostContent(e.target.value)}
+                disabled={loading}
+                required
+              />
+            </Form.Group>
 
-          <div className="d-flex justify-content-end gap-2">
-            <Button variant="secondary" onClick={handleClose} disabled={loading}>
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={loading}
-              style={{ backgroundColor: COMPANY_BLUE, borderColor: COMPANY_BLUE }}
-            >
-              {loading ? "Processing..." : "Submit"}
-            </Button>
-          </div>
-        </Form>
-      </Modal.Body>
+            <Form.Group className="mb-4">
+              <Form.Label>Upload New Attachments</Form.Label>
+              <Form.Control
+                type="file"
+                multiple
+                accept="image/*,application/pdf"
+                onChange={handleFileChange}
+                disabled={loading}
+              />
+            </Form.Group>
+
+            <div className="edit-buttons-row d-flex justify-content-end gap-3">
+              <Button
+                variant="secondary"
+                onClick={handleClose}
+                disabled={loading}
+              >
+                Cancel
+              </Button>
+
+              <Button
+                type="submit"
+                disabled={loading}
+                className="btn-primary"
+              >
+                {loading ? "Processing..." : "Save"}
+              </Button>
+            </div>
+          </Form>
+        </div>
+      </div>
     </Modal>
   );
 }
