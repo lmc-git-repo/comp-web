@@ -45,10 +45,10 @@ const HomePage = () => {
     };
 
     return (
-        <Container fluid className="mt-0 mb-0 p-0">
+        <Container fluid className="p-0">
 
             {/* SLIDESHOW */}
-            <Row className="mx-0 px-0">
+            <Row className="mx-0">
                 <Col xs={12} className="p-0">
                     <Carousel controls={false} indicators={false} interval={2500} fade>
                         {SLIDESHOW_IMAGES.map((img, index) => (
@@ -67,7 +67,7 @@ const HomePage = () => {
             </Row>
 
             {/* CONTENT */}
-            <div style={{ backgroundColor: "white", paddingTop: "40px", paddingBottom: "60px" }}>
+            <div style={{ backgroundColor: "white", padding: "40px 0 60px" }}>
                 <div style={{ maxWidth: "1500px", margin: "0 auto", padding: "0 20px" }}>
 
                     {/* COMPANY NEWS UPDATE */}
@@ -109,26 +109,17 @@ const HomePage = () => {
                                 <div className="about-box-topline"></div>
                                 <div className="about-box-title">CORPORATE POLICY & VISION</div>
 
-                                <p className="company-paragraph">
-                                    <strong>1.</strong>
-                                    Be a leader of light alloy technology and become a company that global
-                                    customers always want to exist.
-                                </p>
-
-                                <p className="company-paragraph">
-                                    <strong>1.1</strong>
-                                    Always stay as an advanced company in fields of light alloy business.
-                                </p>
-
-                                <p className="company-paragraph">
-                                    <strong>1.2</strong>
-                                    Become a collaborative partner that can propose value anywhere, anytime.
-                                </p>
-
-                                <p className="company-paragraph">
-                                    <strong>1.3</strong>
-                                    Become a global company that is strong and flexible against changes of environment.
-                                </p>
+                                {[
+                                    ["1.", "Be a leader of light alloy technology and become a company that global customers always want to exist."],
+                                    ["1.1", "Always stay as an advanced company in fields of light alloy business."],
+                                    ["1.2", "Become a collaborative partner that can propose value anywhere, anytime."],
+                                    ["1.3", "Become a global company that is strong and flexible against changes of environment."]
+                                ].map(([label, text], i) => (
+                                    <div className="company-row" key={i}>
+                                        <span className="company-label">{label}</span>
+                                        <span className="company-text">{text}</span>
+                                    </div>
+                                ))}
                             </div>
                         </Col>
                     </Row>
@@ -140,31 +131,41 @@ const HomePage = () => {
                                 <div className="about-box-topline"></div>
                                 <div className="about-box-title">CORPORATE VALUES</div>
 
-                                <p className="company-paragraph">
-                                    <strong>Customer Satisfaction</strong>
-                                    Deliver products and services that meet the requirements of internal
-                                    and external customers by putting customer value first.
-                                </p>
+                                <div className="company-row">
+                                    <div className="company-label">Customer Satisfaction</div>
+                                    <div className="company-text">
+                                        Deliver products and services that meet the requirements of internal
+                                        and external customers by putting customer value first.
+                                    </div>
+                                </div>
 
-                                <p className="company-paragraph">
-                                    <strong>Teamwork</strong>
-                                    Working together harmoniously to achieve beyond our common goal.
-                                </p>
+                                <div className="company-row">
+                                    <div className="company-label">Teamwork</div>
+                                    <div className="company-text">
+                                        Working together harmoniously to achieve beyond our common goal.
+                                    </div>
+                                </div>
 
-                                <p className="company-paragraph">
-                                    <strong>Quality</strong>
-                                    Give the best effort to achieve excellent results by doing the right thing.
-                                </p>
+                                <div className="company-row">
+                                    <div className="company-label">Quality</div>
+                                    <div className="company-text">
+                                        Give the best effort to achieve excellent results by doing the right thing.
+                                    </div>
+                                </div>
 
-                                <p className="company-paragraph">
-                                    <strong>Professionalism</strong>
-                                    Act in accordance with corporate governance and globally acceptable work ethics.
-                                </p>
+                                <div className="company-row">
+                                    <div className="company-label">Professionalism</div>
+                                    <div className="company-text">
+                                        Act in accordance with corporate governance and globally acceptable work ethics.
+                                    </div>
+                                </div>
 
-                                <p className="company-paragraph">
-                                    <strong>Constant Improvement</strong>
-                                    Continuously making efficient work improvement.
-                                </p>
+                                <div className="company-row">
+                                    <div className="company-label">Constant Improvement</div>
+                                    <div className="company-text">
+                                        Continuously making efficient work improvement.
+                                    </div>
+                                </div>
                             </div>
                         </Col>
                     </Row>

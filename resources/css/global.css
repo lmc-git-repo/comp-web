@@ -1082,3 +1082,99 @@ body {
     margin: 40px auto !important;
     padding: 0 16px !important;
 }
+
+/* ================================
+   FIX: CORPORATE VALUES / POLICY
+   PERFECT MOBILE ALIGNMENT
+================================ */
+
+.company-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    max-width: 1200px;
+    margin: 0 auto 22px auto;
+    padding: 0 24px;
+}
+
+.company-label {
+    min-width: 170px;
+    font-weight: 700;
+    color: var(--company-blue);
+    font-size: 1.15rem;
+    line-height: 1.8;
+}
+
+.company-text {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: #333;
+}
+
+/* =========================================
+   FIX: CORPORATE VALUES CONTAINER SIZE
+   (MOBILE + TABLET ONLY)
+========================================= */
+
+@media (max-width: 768px) {
+
+    /* Slightly shrink the white card */
+    .about-box-frame {
+        margin: 0 12px !important;
+        border-radius: 16px !important;
+    }
+
+    /* Reduce internal padding visually */
+    .company-row {
+        max-width: 100% !important;
+        padding: 0 12px !important;
+    }
+
+    /* Make labels slightly smaller so text aligns tighter */
+    .company-label {
+        font-size: 1.05rem !important;
+        min-width: auto !important;
+    }
+
+    .company-text {
+        font-size: 1.05rem !important;
+        line-height: 1.9 !important;
+    }
+}
+
+/* =========================================================
+   FIX: NAVBAR HAMBURGER ICON — FORCE WHITE (VISIBLE)
+   ========================================================= */
+
+/* Button border */
+.navbar-toggler {
+    border: 2px solid #ffffff !important;
+}
+
+/* Hamburger icon (3 lines) */
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,1)' stroke-width='2.5' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
+}
+
+/* Extra visibility on hover */
+.navbar-toggler:hover {
+    border-color: #ffffff !important;
+}
+
+/* =========================================================
+   FIX: MOBILE NAVBAR ITEMS CENTERING (BOOTSTRAP OVERRIDE)
+   ========================================================= */
+@media (max-width: 991.98px) {
+    .navbar-collapse .navbar-nav {
+        align-items: flex-start !important;
+        text-align: left !important;
+        width: 100%;
+    }
+
+    .navbar-collapse .nav-link,
+    .navbar-collapse button.nav-link {
+        width: 100%;
+        text-align: left !important;
+        padding-left: 0.75rem;
+    }
+}

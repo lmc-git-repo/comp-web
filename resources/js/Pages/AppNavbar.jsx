@@ -1,18 +1,16 @@
 import React, { useState } from "react";
-import { Navbar, Nav, Container, Button, Modal } from "react-bootstrap";
+import { Navbar, Nav, Container, Modal, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const LOGO_SRC = "/images/LMC-Logo-Wht.png";
 
 const AppNavbar = ({ userRole }) => {
-
     const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     const isAuthenticated = !!localStorage.getItem("auth_token");
 
     const isSuperAdmin = userRole === "super admin";
     const isAdmin = userRole === "admin";
-    const isMember = userRole === "member" || userRole === "user";
 
     const handleLogout = () => {
         localStorage.removeItem("auth_token");
@@ -30,12 +28,14 @@ const AppNavbar = ({ userRole }) => {
                         <img
                             src={LOGO_SRC}
                             alt="Logo"
-                            style={{ width: "120px", height: "auto", cursor: "pointer" }}
+                            style={{ width: "120px", height: "auto" }}
                         />
                     </Navbar.Brand>
 
                     <Navbar.Toggle aria-controls="navbar-nav" />
                     <Navbar.Collapse id="navbar-nav">
+
+                        {/* SINGLE NAV GROUP */}
                         <Nav className="ms-auto" style={{ gap: "20px" }}>
 
                             <Nav.Link as={Link} to="/about" className="nav-hover-link">
@@ -53,13 +53,19 @@ const AppNavbar = ({ userRole }) => {
                             )}
 
                             {(isAdmin || isSuperAdmin) && isAuthenticated && (
-                                <Button
-                                    variant="link"
+                                <Nav.Link
+                                    as="button"
                                     onClick={() => setShowLogoutModal(true)}
-                                    className="nav-link navbar-logout-link"
+                                    className="nav-hover-link"
+                                    style={{
+                                        background: "none",
+                                        border: "none",
+                                        padding: 0,
+                                        cursor: "pointer"
+                                    }}
                                 >
                                     Logout
-                                </Button>
+                                </Nav.Link>
                             )}
 
                         </Nav>
@@ -70,7 +76,7 @@ const AppNavbar = ({ userRole }) => {
             {/* LOGOUT CONFIRMATION MODAL */}
             <Modal show={showLogoutModal} onHide={() => setShowLogoutModal(false)} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title style={{ color: "#002C82", fontWeight: "700" }}>
+                    <Modal.Title style={{ color: "#002C82", fontWeight: 700 }}>
                         Confirm Logout
                     </Modal.Title>
                 </Modal.Header>
@@ -83,10 +89,7 @@ const AppNavbar = ({ userRole }) => {
                     <Button
                         variant="secondary"
                         onClick={() => setShowLogoutModal(false)}
-                        style={{
-                            fontWeight: 600,
-                            padding: "6px 18px"
-                        }}
+                        style={{ fontWeight: 600 }}
                     >
                         Cancel
                     </Button>
@@ -94,12 +97,7 @@ const AppNavbar = ({ userRole }) => {
                     <Button
                         variant="danger"
                         onClick={handleLogout}
-                        style={{
-                            backgroundColor: "#dc3545",
-                            borderColor: "#dc3545",
-                            fontWeight: 600,
-                            padding: "6px 18px"
-                        }}
+                        style={{ fontWeight: 600 }}
                     >
                         Logout
                     </Button>
