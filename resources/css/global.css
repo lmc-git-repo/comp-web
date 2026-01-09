@@ -1228,3 +1228,79 @@ body {
         width: 100%;
     }
 }
+
+/* =========================================================
+   USER MANAGEMENT — MOBILE LAYOUT IMPROVEMENTS
+   ========================================================= */
+@media (max-width: 768px) {
+
+    /* Reduce outer spacing so content is not squeezed */
+    .user-management-wrapper {
+        padding: 20px 16px !important;
+        margin: 20px 12px !important;
+        max-width: 100% !important;
+    }
+
+    /* Stack title and Add User button vertically */
+    .user-management-title {
+        font-size: 2.1rem !important;
+        margin-bottom: 12px !important;
+        text-align: center !important;
+    }
+
+    /* Fix header layout on mobile */
+    .user-management-title
+    + .user-add-btn-header {
+        margin-top: 10px;
+    }
+
+    /* Make Add User button mobile-friendly */
+    .user-add-btn-header {
+        width: 100% !important;
+        display: block !important;
+        text-align: center !important;
+        padding: 12px 16px !important;
+        font-size: 1.05rem !important;
+        border-radius: 10px !important;
+    }
+
+    /* Ensure header container stacks properly */
+    .user-management-wrapper
+    ~ .d-flex,
+    .d-flex.justify-content-between {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+}
+
+/* =========================================================
+   USER MANAGEMENT — MOBILE CONTENT READABILITY FIX
+   ========================================================= */
+@media (max-width: 768px) {
+
+    /* Stack label and value vertically */
+    .user-table td {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 4px;
+    }
+
+    /* Label styling */
+    .user-table td::before {
+        font-size: 0.95rem;
+        margin-bottom: 2px;
+    }
+
+    /* Value styling (email, name, role) */
+    .user-table td {
+        font-size: 1.05rem;
+        word-break: break-word;
+        white-space: normal;
+    }
+
+    /* Ensure email wraps cleanly */
+    .user-table td[data-label="Email"] {
+        line-height: 1.6;
+    }
+}
