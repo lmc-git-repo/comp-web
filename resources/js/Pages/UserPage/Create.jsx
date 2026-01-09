@@ -43,6 +43,13 @@ export default function CreateUserModal({ show, handleClose, refreshUsers }) {
         e.preventDefault();
         setError(null);
 
+        // ✅ INSERT: password length validation
+        if (formData.password.length < 8) {
+            setError("Password must be at least 8 characters.");
+            return;
+        }
+
+        // existing check (kept)
         if (formData.password !== formData.password_confirmation) {
             setError("Passwords do not match.");
             return;
@@ -51,11 +58,20 @@ export default function CreateUserModal({ show, handleClose, refreshUsers }) {
         setLoading(true);
 
         try {
-            await api.post("/users", formData);
+            await api.post("/users", {
+                ...formData,
+                role: formData.role.toLowerCase(), // ✅ ensure safe role value
+            });
+
             refreshUsers();
             closeModal();
         } catch (err) {
-            setError("Unable to create user. Please check your inputs.");
+            // ✅ INSERT: show real backend message if available
+            if (err.response?.data?.message) {
+                setError(err.response.data.message);
+            } else {
+                setError("Unable to create user. Please check your inputs.");
+            }
         } finally {
             setLoading(false);
         }
@@ -136,9 +152,9 @@ export default function CreateUserModal({ show, handleClose, refreshUsers }) {
                                 value={formData.role}
                                 onChange={handleChange}
                             >
-                                <option value="super admin">Super Admin</option>
+                                {/* ✅ FIXED VALUE */}
+                                <option value="super_admin">Super Admin</option>
                                 <option value="admin">Admin</option>
-                                <option value="member">Member</option>
                             </Form.Select>
                         </Form.Group>
 
