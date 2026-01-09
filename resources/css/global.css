@@ -1178,3 +1178,53 @@ body {
         padding-left: 0.75rem;
     }
 }
+
+/* =========================================================
+   USER MANAGEMENT — MOBILE RESPONSIVE FIX (SAFE ADDITION)
+   ========================================================= */
+@media (max-width: 768px) {
+
+    .user-table thead {
+        display: none;
+    }
+
+    .user-table,
+    .user-table tbody,
+    .user-table tr,
+    .user-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .user-table tr {
+        background: #ffffff;
+        border: 1px solid #e1e4f0;
+        border-radius: 12px;
+        margin-bottom: 16px;
+        padding: 12px;
+    }
+
+    .user-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        background: transparent;
+        border: none;
+    }
+
+    .user-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--company-blue);
+    }
+
+    .user-actions-cell {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .user-actions-cell button {
+        width: 100%;
+    }
+}

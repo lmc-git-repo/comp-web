@@ -22,7 +22,6 @@ import NewsPageShow from './Pages/NewsPage/Show';
 import UserIndexPage from './Pages/UserPage/Index';
 import UserCreatePage from './Pages/UserPage/Create';
 import UserEditPage from './Pages/UserPage/Edit';
-import UserShowPage from './Pages/UserPage/Show';
 
 const AppWrapper = () => {
     const location = useLocation();
@@ -139,15 +138,6 @@ const AppWrapper = () => {
                         element={
                             <ProtectedRoute allowedRoles={["super admin"]}>
                                 <UserEditPage />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/admin/users/view/:userId"
-                        element={
-                            <ProtectedRoute allowedRoles={["super admin"]}>
-                                <UserShowPage />
                             </ProtectedRoute>
                         }
                     />
