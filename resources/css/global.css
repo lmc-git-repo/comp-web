@@ -35,9 +35,6 @@ body {
     min-height: 100%;
 }
 
-/* ---------------------------------------------------------
-| FORM LABEL + INPUT — UNIFIED STYLE FOR ALL PAGES
---------------------------------------------------------- */
 .form-label {
     font-size: 1.05rem !important;
     font-weight: 600 !important;
@@ -57,7 +54,7 @@ body {
 }
 
 /* ---------------------------------------------------------
-| 3. LOGIN PAGE — Clean final version
+| 3. LOGIN PAGE
 --------------------------------------------------------- */
 
 .login-bg-blur {
@@ -131,7 +128,7 @@ body {
 }
 
 /* ---------------------------------------------------------
-| 4. APP LAYOUT (Sticky Footer)
+| 4. APP LAYOUT
 --------------------------------------------------------- */
 .app-container {
     display: flex;
@@ -173,7 +170,7 @@ body {
     object-fit: cover;
 }
 
-.home-hero-image.slide-2 { object-position: center 53%; }
+.home-hero-image.slide-2 { object-position: center 63%; }
 .home-hero-image.slide-3 { object-position: center 75%; }
 
 /* ---------------------------------------------------------

@@ -2,8 +2,8 @@ import React from 'react';
 import { Container, Row, Col, Image } from 'react-bootstrap';
 
 const MAIN_IMAGE_SRC = '/images/bg.JPG';
-const CSR_IMAGE_SRC = '/images/corporate social responsibility.png';
-const GOV_IMAGE_SRC = '/images/corporate governance.png';
+const CSR_IMAGE_SRC = '/images/corporate social responsibility-edited.png';
+const GOV_IMAGE_SRC = '/images/corporate governance-edited.png';
 const TIMELINE_IMAGE_SRC = '/images/history timeline.png';
 
 const NAVBAR_BLUE = '#002C82';
