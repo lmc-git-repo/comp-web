@@ -5,8 +5,8 @@ import api from "../api/axios";
 
 const SLIDESHOW_IMAGES = [
     "/images/bg.JPG",
-    "/images/bg2.JPG",
-    "/images/bg3.JPG"
+    "/images/bg2.png",
+    "/images/bg1.png"
 ];
 
 const formatDate = (dateString) => {
