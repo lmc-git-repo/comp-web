@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Card, Alert, Image, Button } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Alert,
+  Image,
+  Button,
+  Modal
+} from "react-bootstrap";
 import { useParams, Link } from "react-router-dom";
 import api from "../../api/axios";
 
@@ -19,6 +28,10 @@ const NewsPageShow = () => {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // ✅ IMAGE ZOOM STATE
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [activeImage, setActiveImage] = useState(null);
 
   const loadPost = async () => {
     try {
@@ -58,108 +71,140 @@ const NewsPageShow = () => {
   const attachments = Array.isArray(post.attachments) ? post.attachments : [];
 
   return (
-    <Container className="mt-5 mb-5">
-      <Row className="justify-content-center">
-        <Col md={10}>
+    <>
+      <Container className="mt-5 mb-5">
+        <Row className="justify-content-center">
+          <Col md={10}>
 
-          <div className="about-box-frame">
-            <div className="about-box-topline"></div>
+            <div className="about-box-frame">
+              <div className="about-box-topline"></div>
 
-            <div className="p-4">
+              <div className="p-4">
 
-              <h2 className="details-title">ANNOUNCEMENT DETAILS</h2>
+                <h2 className="details-title">ANNOUNCEMENT DETAILS</h2>
 
-              <h3
-                className="fw-bold"
-                style={{
-                  color: HEADER_BLUE,
-                  fontSize: "1.65rem",
-                  textTransform: "uppercase",
-                  marginBottom: "15px"
-                }}
-              >
-                {post.title}
-              </h3>
+                <h3
+                  className="fw-bold"
+                  style={{
+                    color: HEADER_BLUE,
+                    fontSize: "1.65rem",
+                    textTransform: "uppercase",
+                    marginBottom: "15px"
+                  }}
+                >
+                  {post.title}
+                </h3>
 
-              <p className="text-muted mb-4" style={{ fontSize: "1rem" }}>
-                Posted on {formatDate(post.posted_at)}
-              </p>
+                <p className="text-muted mb-4" style={{ fontSize: "1rem" }}>
+                  Posted on {formatDate(post.posted_at)}
+                </p>
 
-              <p
-                style={{
-                  fontSize: "1.15rem",
-                  lineHeight: "1.85",
-                  whiteSpace: "pre-wrap",
-                  marginBottom: "20px"
-                }}
-              >
-                {post.content}
-              </p>
+                <p
+                  style={{
+                    fontSize: "1.15rem",
+                    lineHeight: "1.85",
+                    whiteSpace: "pre-wrap",
+                    marginBottom: "20px"
+                  }}
+                >
+                  {post.content}
+                </p>
 
-              {/* ATTACHMENTS */}
-              {attachments.length > 0 && (
+                {/* ATTACHMENTS */}
+                {attachments.length > 0 && (
+                  <div className="mt-4">
+                    <h5 className="fw-bold" style={{ color: HEADER_BLUE }}>
+                      Attachments
+                    </h5>
+
+                    {attachments.map((file) => (
+                      <div key={file.id} className="mb-3">
+
+                        {file.mime_type?.startsWith("image/") ? (
+                          <>
+                            <Image
+                              src={file.url}
+                              alt={file.file_name}
+                              fluid
+                              className="rounded shadow-sm mb-2 zoomable-image"
+                              style={{ maxHeight: "400px" }}
+                              onClick={() => {
+                                setActiveImage(file.url);
+                                setShowImageModal(true);
+                              }}
+                            />
+
+                            <small className="text-muted fst-italic d-block">
+                              Click image to zoom
+                            </small>
+
+                            <a
+                              href={file.url}
+                              download={file.file_name}
+                              className="text-primary small d-block mt-1"
+                              style={{ fontStyle: "italic" }}
+                            >
+                              Download image ({file.file_name})
+                            </a>
+                          </>
+                        ) : (
+                          <Alert
+                            variant="light"
+                            className="d-inline-flex align-items-center p-2 shadow-sm"
+                          >
+                            <span className="me-2 text-primary">📄</span>
+                            <a
+                              href={file.url}
+                              download={file.file_name}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-decoration-underline"
+                            >
+                              {file.file_name}
+                            </a>
+                          </Alert>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <div className="mt-4">
-                  <h5 className="fw-bold" style={{ color: HEADER_BLUE }}>
-                    Attachments
-                  </h5>
-
-                  {attachments.map((file) => (
-                    <div key={file.id} className="mb-3">
-
-                      {/* IMAGE PREVIEW */}
-                      {file.mime_type?.startsWith("image/") ? (
-                        <>
-                          <Image
-                            src={file.url}
-                            alt={file.file_name}
-                            fluid
-                            className="rounded shadow-sm mb-2"
-                            style={{ maxHeight: "400px" }}
-                          />
-
-                          <a
-                            href={file.url}
-                            download={file.file_name}
-                            className="text-primary small d-block mt-1"
-                            style={{ fontStyle: "italic" }}
-                          >
-                            Download image ({file.file_name})
-                          </a>
-                        </>
-                      ) : (
-                        <Alert
-                          variant="light"
-                          className="d-inline-flex align-items-center p-2 shadow-sm"
-                        >
-                          <span className="me-2 text-primary">📄</span>
-                          <a
-                            href={file.url}
-                            download={file.file_name}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-decoration-underline"
-                          >
-                            {file.file_name}
-                          </a>
-                        </Alert>
-                      )}
-                    </div>
-                  ))}
+                  <Link to="/news" className="btn btn-secondary">
+                    ← Back to Announcement Board
+                  </Link>
                 </div>
-              )}
 
-              <div className="mt-4">
-                <Link to="/news" className="btn btn-secondary">
-                  ← Back to Announcement Board
-                </Link>
               </div>
-
             </div>
-          </div>
 
-        </Col>
-      </Row>
-    </Container>
+          </Col>
+        </Row>
+      </Container>
+
+      {/* ✅ IMAGE ZOOM MODAL */}
+      <Modal
+        show={showImageModal}
+        onHide={() => setShowImageModal(false)}
+        centered
+        size="xl"
+        backdrop="static"
+        className="image-zoom-modal"
+      >
+        <Modal.Body className="p-0 bg-dark text-center">
+          <Image
+            src={activeImage}
+            fluid
+            style={{
+              maxHeight: "90vh",
+              objectFit: "contain",
+              cursor: "zoom-out"
+            }}
+            onClick={() => setShowImageModal(false)}
+          />
+        </Modal.Body>
+      </Modal>
+    </>
   );
 };
 

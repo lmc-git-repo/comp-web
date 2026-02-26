@@ -1304,3 +1304,19 @@ body {
         line-height: 1.6;
     }
 }
+
+.zoomable-image {
+    cursor: zoom-in;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.zoomable-image:hover {
+    transform: scale(1.01);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+}
+
+/* Dark modal background */
+.image-zoom-modal .modal-content {
+    background: #000 !important;
+    border: none !important;
+}
