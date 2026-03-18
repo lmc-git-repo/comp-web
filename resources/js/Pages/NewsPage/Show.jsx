@@ -79,12 +79,12 @@ const NewsPageShow = () => {
             <div className="about-box-frame">
               <div className="about-box-topline"></div>
 
-              <div className="p-4">
+              <div className="p-4 news-details-content">
 
-                <h2 className="details-title">ANNOUNCEMENT DETAILS</h2>
+                <h2 className="details-title news-details-title">ANNOUNCEMENT DETAILS</h2>
 
                 <h3
-                  className="fw-bold"
+                  className="fw-bold news-details-post-title"
                   style={{
                     color: HEADER_BLUE,
                     fontSize: "1.65rem",
@@ -95,11 +95,12 @@ const NewsPageShow = () => {
                   {post.title}
                 </h3>
 
-                <p className="text-muted mb-4" style={{ fontSize: "1rem" }}>
+                <p className="text-muted mb-4 news-details-date" style={{ fontSize: "1rem" }}>
                   Posted on {formatDate(post.posted_at)}
                 </p>
 
                 <p
+                  className="news-details-body"
                   style={{
                     fontSize: "1.15rem",
                     lineHeight: "1.85",
@@ -112,7 +113,7 @@ const NewsPageShow = () => {
 
                 {/* ATTACHMENTS */}
                 {attachments.length > 0 && (
-                  <div className="mt-4">
+                  <div className="mt-4 news-details-attachments">
                     <h5 className="fw-bold" style={{ color: HEADER_BLUE }}>
                       Attachments
                     </h5>
@@ -141,7 +142,7 @@ const NewsPageShow = () => {
                             <a
                               href={file.url}
                               download={file.file_name}
-                              className="text-primary small d-block mt-1"
+                              className="text-primary small d-block mt-1 news-details-download-link"
                               style={{ fontStyle: "italic" }}
                             >
                               Download image ({file.file_name})
@@ -150,7 +151,7 @@ const NewsPageShow = () => {
                         ) : (
                           <Alert
                             variant="light"
-                            className="d-inline-flex align-items-center p-2 shadow-sm"
+                            className="d-inline-flex align-items-center p-2 shadow-sm news-details-file-alert"
                           >
                             <span className="me-2 text-primary">📄</span>
                             <a
@@ -158,7 +159,7 @@ const NewsPageShow = () => {
                               download={file.file_name}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-decoration-underline"
+                              className="text-decoration-underline news-details-file-link"
                             >
                               {file.file_name}
                             </a>
@@ -169,8 +170,8 @@ const NewsPageShow = () => {
                   </div>
                 )}
 
-                <div className="mt-4">
-                  <Link to="/news" className="btn btn-secondary">
+                <div className="mt-4 news-details-back-btn-wrap">
+                  <Link to="/news" className="btn btn-secondary news-details-back-btn">
                     ← Back to Announcement Board
                   </Link>
                 </div>

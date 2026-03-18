@@ -436,17 +436,31 @@ body {
 .nav-link.active::after { width: 100%; }
 
 /* ---------------------------------------------------------
-| NAVBAR HAMBURGER ICON — MOBILE VISIBILITY FIX
+| NAVBAR HAMBURGER ICON
 --------------------------------------------------------- */
 
-/* White border for toggle button */
 .navbar-dark .navbar-toggler {
     border-color: rgba(255, 255, 255, 0.6);
 }
 
-/* White hamburger icon */
 .navbar-dark .navbar-toggler-icon {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255,255,255,1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.navbar-toggler:focus,
+.navbar-toggler:active,
+.navbar-toggler:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+.navbar-toggler {
+    background-color: transparent !important;
+}
+
+.navbar-toggler {
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 /* ---------------------------------------------------------
@@ -1316,4 +1330,61 @@ body {
 .image-zoom-modal .modal-content {
     background: #000 !important;
     border: none !important;
+}
+
+/* =========================================================
+   NEWS DETAILS PAGE — MOBILE SIDE (SHOW.JSX)
+   ========================================================= */
+@media (max-width: 768px) {
+
+    .news-details-content {
+        padding: 18px 14px !important;
+    }
+
+    .news-details-title {
+        font-size: 1.6rem !important;
+        line-height: 1.4 !important;
+        word-break: break-word;
+        padding: 0 6px;
+    }
+
+    .news-details-post-title {
+        font-size: 1.2rem !important;
+        line-height: 1.5 !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+
+    .news-details-date {
+        font-size: 0.95rem !important;
+    }
+
+    .news-details-body {
+        font-size: 1.05rem !important;
+        line-height: 1.9 !important;
+        word-break: break-word;
+    }
+
+    .news-details-file-link,
+    .news-details-download-link {
+        word-break: break-word !important;
+    }
+
+    .news-details-attachments {
+        margin-top: 15px !important;
+    }
+
+    .news-details-file-alert {
+        width: 100% !important;
+        flex-wrap: wrap !important;
+    }
+
+    .news-details-back-btn-wrap {
+        margin-top: 25px !important;
+    }
+
+    .news-details-back-btn {
+        width: 100% !important;
+        text-align: center !important;
+    }
 }
