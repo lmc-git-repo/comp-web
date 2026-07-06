@@ -93,7 +93,7 @@ const AboutPage = () => {
                     </Col>
                 </Row>
 
-                {/* TIMELINE BOX */}
+                {/* TIMELINE BOX
                 <Row className="about-section text-center mb-5">
                     <Col lg={12}>
                         <div className="about-box-frame">
@@ -109,7 +109,7 @@ const AboutPage = () => {
                             />
                         </div>
                     </Col>
-                </Row>
+                </Row> */}
 
             </Container>
         </div>
