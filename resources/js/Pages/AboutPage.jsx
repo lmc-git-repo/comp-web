@@ -92,25 +92,6 @@ const AboutPage = () => {
                         </div>
                     </Col>
                 </Row>
-
-                {/* TIMELINE BOX
-                <Row className="about-section text-center mb-5">
-                    <Col lg={12}>
-                        <div className="about-box-frame">
-                            <div className="about-box-topline"></div>
-                            <div className="about-box-title">
-                                HISTORY TIMELINES
-                            </div>
-                            <img
-                                src={TIMELINE_IMAGE_SRC}
-                                loading="lazy"
-                                alt="History Timeline"
-                                className="about-box-image"
-                            />
-                        </div>
-                    </Col>
-                </Row> */}
-
             </Container>
         </div>
     );
