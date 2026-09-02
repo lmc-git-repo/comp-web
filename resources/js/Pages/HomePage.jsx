@@ -110,14 +110,14 @@ const HomePage = () => {
                                 <div className="about-box-title">CORPORATE POLICY & VISION</div>
 
                                 {[
-                                    ["1.", "Be a leader of light alloy technology and become a company that global customer always wanted to exist."],
+                                    ["1.", "Be a leader of light alloy technology and become a company that global customer always wanted to exist"],
                                     ["A.", "Always stay as an advanced company in fields of light alloy business"],
                                     ["B.", "Become a collaborative partner that can propose value anywhere, anytime"],
                                     ["C.", "Become a global company that is strong and flexible against changes of environment"],
                                     ["2.", "Be a corporate group that constantly makes associates feel being proud and confident to be with the team"],
-                                    ["A.", "Achieve an environment friendly workplace that is comfortable to associate better than other in the casting industry."],
+                                    ["A.", "Achieve an environment friendly workplace that is comfortable to associate better than other in the casting industry"],
                                     ["B.", 'Share the joy of making "only-one products" in such an environment that is created by associates themselves'],
-                                    ["C.", "Be a group known across the globe and proactive in any challenge by respecting individual motivation."]
+                                    ["C.", "Be a group known across the globe and proactive in any challenge by respecting individual motivation"]
                                 ].map(([label, text], i) => (
                                     <div className="company-row" key={i}>
                                         <span className="company-label">{label}</span>
@@ -136,39 +136,52 @@ const HomePage = () => {
                                 <div className="about-box-title">CORPORATE VALUES</div>
 
                                 <div className="company-row">
-                                    <div className="company-label">Customer Satisfaction</div>
+                                    <div className="company-label">
+                                        M - <u>Make Safety Our Priority</u>
+                                    </div>
                                     <div className="company-text">
-                                        Deliver products and services that meet the requirements of internal
-                                        and external customers by putting the value of our customers as our
-                                        number one priority.
+                                        Protect everyone by following safety rules, identifying risks,
+                                        and preventing accidents.
                                     </div>
                                 </div>
 
                                 <div className="company-row">
-                                    <div className="company-label">Teamwork</div>
+                                    <div className="company-label">
+                                        E - <u>Excellence in QCD</u>
+                                    </div>
                                     <div className="company-text">
-                                        Working together harmoniously to achieve beyond our common goal.
+                                        Deliver quality products that meet customer satisfaction and
+                                        take responsibility for our work.
                                     </div>
                                 </div>
 
                                 <div className="company-row">
-                                    <div className="company-label">Quality</div>
+                                    <div className="company-label">
+                                        T - <u>Teamwork for Success</u>
+                                    </div>
                                     <div className="company-text">
-                                        Give the best effort to achieve excellent results by doing the right thing which make it a habit.
+                                        Work together in a collaborative and supportive environment
+                                        to achieve our goals as one team.
                                     </div>
                                 </div>
 
                                 <div className="company-row">
-                                    <div className="company-label">Professionalism</div>
+                                    <div className="company-label">
+                                        T - <u>Trust Through Professionalism</u>
+                                    </div>
                                     <div className="company-text">
-                                        Act in accordance with our corporate governance and globally acceptable work ethics.
+                                        Act with integrity, discipline, respect, and accountability for
+                                        our actions.
                                     </div>
                                 </div>
 
                                 <div className="company-row">
-                                    <div className="company-label">Constant Improvement</div>
+                                    <div className="company-label">
+                                        S - <u>Strive to Evolve</u>
+                                    </div>
                                     <div className="company-text">
-                                        Continuously making efficient work improvement.
+                                        Continuously seek new ideas and better ways of working by
+                                        learning from mistakes and challenges.
                                     </div>
                                 </div>
                             </div>
