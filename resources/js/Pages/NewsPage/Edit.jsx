@@ -161,7 +161,7 @@ export default function NewsPageEdit() {
                                     Company News
                                 </option>
                                 <option value="disaster_risk">
-                                    Disaster Risk Advisories
+                                    Advisory Bulletin
                                 </option>
                             </Form.Select>
                         </Form.Group>
