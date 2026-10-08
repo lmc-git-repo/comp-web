@@ -10,9 +10,27 @@ use Illuminate\Support\Facades\Storage;
 class AnnouncementController extends Controller
 {
     // ===============================
+    // PUBLIC JAPANESE TRANSLATION
+    // ===============================
+    private function translateAnnouncement($post)
+    {
+        // Use manually saved Japanese translations.
+        // Fall back to the original English text if unavailable.
+        if (!empty($post->title_ja)) {
+            $post->title = $post->title_ja;
+        }
+
+        if (!empty($post->content_ja)) {
+            $post->content = $post->content_ja;
+        }
+
+        return $post;
+    }
+
+    // ===============================
     // LIST ALL ANNOUNCEMENTS
     // ===============================
-    public function index()
+    public function index(Request $request)
     {
         $posts = Announcement::with('attachments')
             ->orderByDesc('posted_at')
@@ -23,6 +41,11 @@ class AnnouncementController extends Controller
             foreach ($post->attachments as $file) {
                 $file->url = Storage::disk('public')->url($file->file_path);
             }
+
+            // Show Japanese translations only when explicitly requested.
+            if ($request->query('lang') === 'ja') {
+                $this->translateAnnouncement($post);
+            }
         }
 
         return response()->json($posts);
@@ -31,7 +54,7 @@ class AnnouncementController extends Controller
     // ===============================
     // SHOW ANNOUNCEMENT
     // ===============================
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $post = Announcement::with('attachments')->find($id);
 
@@ -43,25 +66,34 @@ class AnnouncementController extends Controller
             $file->url = Storage::disk('public')->url($file->file_path);
         }
 
+        // Show Japanese translations only when explicitly requested.
+        if ($request->query('lang') === 'ja') {
+            $this->translateAnnouncement($post);
+        }
+
         return response()->json($post);
     }
 
-        // ===============================
-        // CREATE ANNOUNCEMENT
-        // ===============================
-        public function store(Request $request)
+    // ===============================
+    // CREATE ANNOUNCEMENT
+    // ===============================
+    public function store(Request $request)
     {
         $validated = $request->validate([
-            'title'   => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'content' => 'required|string',
-
-            // ✅ FIX: DO NOT force array on multipart uploads
+            'title_ja' => 'nullable|string|max:255',
+            'content_ja' => 'nullable|string',
+            'category' => 'required|in:company_news,disaster_risk',
             'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf|max:10240',
         ]);
 
         $announcement = Announcement::create([
-            'title'     => $validated['title'],
-            'content'   => $validated['content'],
+            'title' => $validated['title'],
+            'content' => $validated['content'],
+            'title_ja' => $validated['title_ja'] ?? null,
+            'content_ja' => $validated['content_ja'] ?? null,
+            'category' => $validated['category'],
             'posted_at' => now(),
         ]);
 
@@ -71,11 +103,11 @@ class AnnouncementController extends Controller
 
                 Attachment::create([
                     'announcement_id' => $announcement->id,
-                    'file_name'       => $file->getClientOriginalName(),
-                    'file_path'       => $path,
-                    'mime_type'       => $file->getMimeType(),
-                    'file_type'       => $file->extension(),
-                    'file_size'       => $file->getSize(),
+                    'file_name' => $file->getClientOriginalName(),
+                    'file_path' => $path,
+                    'mime_type' => $file->getMimeType(),
+                    'file_type' => $file->extension(),
+                    'file_size' => $file->getSize(),
                 ]);
             }
         }
@@ -92,7 +124,6 @@ class AnnouncementController extends Controller
         ], 201);
     }
 
-
     // ===============================
     // UPDATE ANNOUNCEMENT
     // ===============================
@@ -100,21 +131,31 @@ class AnnouncementController extends Controller
     {
         $announcement = Announcement::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string',
             'content' => 'required|string',
+            'title_ja' => 'nullable|string|max:255',
+            'content_ja' => 'nullable|string',
+            'category' => 'required|in:company_news,disaster_risk',
             'attachments' => 'nullable|array',
             'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf|max:51200',
         ]);
 
         $announcement->update([
-            'title'   => $request->title,
-            'content' => $request->content,
+            'title' => $validated['title'],
+            'content' => $validated['content'],
+            'title_ja' => $validated['title_ja'] ?? null,
+            'content_ja' => $validated['content_ja'] ?? null,
+            'category' => $validated['category'],
         ]);
 
         if ($request->filled('deleted_attachments')) {
             $ids = $request->input('deleted_attachments', []);
-            $attachments = Attachment::whereIn('id', $ids)->get();
+
+            $attachments = Attachment::where(
+                'announcement_id',
+                $announcement->id
+            )->whereIn('id', $ids)->get();
 
             foreach ($attachments as $att) {
                 Storage::disk('public')->delete($att->file_path);
@@ -128,11 +169,11 @@ class AnnouncementController extends Controller
 
                 Attachment::create([
                     'announcement_id' => $announcement->id,
-                    'file_name'       => $file->getClientOriginalName(),
-                    'file_path'       => $path,
-                    'mime_type'       => $file->getMimeType(),
-                    'file_type'       => $file->extension(),
-                    'file_size'       => $file->getSize(),
+                    'file_name' => $file->getClientOriginalName(),
+                    'file_path' => $path,
+                    'mime_type' => $file->getMimeType(),
+                    'file_type' => $file->extension(),
+                    'file_size' => $file->getSize(),
                 ]);
             }
         }

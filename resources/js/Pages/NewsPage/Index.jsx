@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Modal, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -7,16 +8,16 @@ import CreateAnnouncementModal from "./Create";
 const HEADER_BLUE = "#002C82";
 const ACCENT_RED = "#dc3545";
 
-const formatDate = (dateString) => {
+const formatDate = (dateString, language = "en") => {
   if (!dateString) return "";
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat(language === "ja" ? "ja-JP" : "en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   }).format(new Date(dateString));
 };
 
-const NewsPageIndex = () => {
+const NewsPageIndex = ({ category = "company_news", language = "en" }) => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [postToDeleteId, setPostToDeleteId] = useState(null);
@@ -29,11 +30,17 @@ const NewsPageIndex = () => {
   const role = localStorage.getItem("user_role");
   const isAdmin = role === "admin" || role === "super admin";
 
+  const isDisaster = category === "disaster_risk";
+  const isJapanese = !isAdmin && language === "ja";
+
   const loadAnnouncements = async () => {
     setLoading(true);
     try {
-      const res = await api.get("/announcements");
-      setAnnouncements(res.data || []);
+      const res = await api.get("/announcements", {
+        params: isJapanese ? { lang: "ja" } : {}
+      });
+
+      setAnnouncements(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Failed to load announcements:", err);
     } finally {
@@ -43,9 +50,9 @@ const NewsPageIndex = () => {
 
   useEffect(() => {
     loadAnnouncements();
-  }, []);
+  }, [category, isJapanese]);
 
-  // ✅ FIX: RELOAD DATA AFTER CREATE
+  // RELOAD DATA AFTER CREATE
   const handlePostSuccess = () => {
     loadAnnouncements();
     setShowCreateModal(false);
@@ -79,7 +86,12 @@ const NewsPageIndex = () => {
     const title = (post.title || "").toLowerCase();
     const content = (post.content || "").toLowerCase();
 
-    return title.includes(search) || content.includes(search);
+    const postCategory = post.category || "company_news";
+
+    return (
+      postCategory === category &&
+      (title.includes(search) || content.includes(search))
+    );
   });
 
   return (
@@ -88,13 +100,15 @@ const NewsPageIndex = () => {
         <Row className="justify-content-center">
           <Col md={10}>
             <h2 className="section-title mb-4" style={{ fontSize: "2.5rem" }}>
-              ANNOUNCEMENT BOARD
+              {isJapanese
+                ? (isDisaster ? "防災・緊急情報" : "会社ニュース")
+                : (isDisaster ? "DISASTER RISK ADVISORIES" : "COMPANY NEWS")}
             </h2>
 
             <div className="d-flex justify-content-center mb-4">
               <input
                 type="text"
-                placeholder="Search announcements..."
+                placeholder={isJapanese ? "お知らせを検索..." : "Search announcements..."}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="form-control"
@@ -153,7 +167,8 @@ const NewsPageIndex = () => {
                     </p>
 
                     <small className="text-muted">
-                      Posted on {formatDate(post.posted_at)}
+                      {isJapanese ? "掲載日：" : "Posted on "}
+                      {formatDate(post.posted_at, isJapanese ? "ja" : "en")}
                     </small>
 
                     {isAdmin && (
@@ -185,7 +200,9 @@ const NewsPageIndex = () => {
             ) : (
               !loading && (
                 <div className="text-center text-muted py-5">
-                  <p className="fs-4">NO ANNOUNCEMENT POST</p>
+                  <p className="fs-4">
+                    {isJapanese ? "現在、お知らせはありません。" : "NO ANNOUNCEMENT POST"}
+                  </p>
                 </div>
               )
             )}
@@ -203,9 +220,11 @@ const NewsPageIndex = () => {
       </Container>
 
       <CreateAnnouncementModal
+        key={category}
         show={showCreateModal}
         handleClose={() => setShowCreateModal(false)}
         onPostSuccess={handlePostSuccess}
+        defaultCategory={category}
       />
 
       <Modal show={showDeleteModal} onHide={handleCloseDelete} centered>

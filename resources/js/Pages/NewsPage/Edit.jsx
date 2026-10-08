@@ -9,7 +9,12 @@ export default function NewsPageEdit() {
   const { postId } = useParams();
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({ title: "", content: "" });
+  const [formData, setFormData] = useState({
+    title: "",
+    content: "",
+    category: "company_news"
+  });
+
   const [existingAttachments, setExistingAttachments] = useState([]);
   const [deletedAttachments, setDeletedAttachments] = useState([]);
   const [newFiles, setNewFiles] = useState([]);
@@ -18,6 +23,9 @@ export default function NewsPageEdit() {
   const [error, setError] = useState(null);
   const [initialPost, setInitialPost] = useState(null);
   const [hasChanges, setHasChanges] = useState(false);
+
+  const getCategoryPath = (category) =>
+    category === "disaster_risk" ? "/news/disaster-risk" : "/news";
 
   useEffect(() => {
     const loadPost = async () => {
@@ -29,6 +37,7 @@ export default function NewsPageEdit() {
         setFormData({
           title: post.title,
           content: post.content,
+          category: post.category || "company_news"
         });
 
         setExistingAttachments(post.attachments || []);
@@ -49,6 +58,7 @@ export default function NewsPageEdit() {
     const changed =
       formData.title !== initialPost.title ||
       formData.content !== initialPost.content ||
+      formData.category !== (initialPost.category || "company_news") ||
       newFiles.length > 0 ||
       deletedAttachments.length > 0;
 
@@ -82,6 +92,7 @@ export default function NewsPageEdit() {
       const form = new FormData();
       form.append("title", formData.title);
       form.append("content", formData.content);
+      form.append("category", formData.category);
 
       deletedAttachments.forEach(id => form.append("deleted_attachments[]", id));
       newFiles.forEach(file => form.append("attachments[]", file));
@@ -90,7 +101,7 @@ export default function NewsPageEdit() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      navigate("/news");
+      navigate(getCategoryPath(formData.category));
 
     } catch (err) {
       console.error("Update failed:", err);
@@ -130,7 +141,6 @@ export default function NewsPageEdit() {
 
                 <div className="edit-announcement-topline"></div>
 
-
                 <h2 className="edit-title text-center mb-4">
                   EDIT ANNOUNCEMENT
                 </h2>
@@ -138,6 +148,23 @@ export default function NewsPageEdit() {
                     {error && <Alert variant="danger">{error}</Alert>}
 
                     <Form onSubmit={handleSubmit}>
+
+                        {/* CATEGORY */}
+                        <Form.Group className="mb-4">
+                            <Form.Label>Announcement Category</Form.Label>
+                            <Form.Select
+                                name="category"
+                                value={formData.category}
+                                onChange={handleInputChange}
+                            >
+                                <option value="company_news">
+                                    Company News
+                                </option>
+                                <option value="disaster_risk">
+                                    Disaster Risk Advisories
+                                </option>
+                            </Form.Select>
+                        </Form.Group>
 
                         {/* TITLE */}
                         <Form.Group className="mb-4">
@@ -202,13 +229,16 @@ export default function NewsPageEdit() {
 
                         {/* BUTTONS */}
                         <div className="d-flex justify-content-between">
-                            <Button variant="secondary" onClick={() => navigate("/news")}>
+                            <Button
+                                variant="secondary"
+                                onClick={() => navigate(getCategoryPath(initialPost?.category))}
+                            >
                                 Cancel
                             </Button>
                             <Button
                                 type="submit"
-                                disabled={!hasChanges}
-                                style={{ backgroundColor: "#004d99", borderColor: "#004d99" }}
+                                disabled={!hasChanges || loading}
+                                style={{ backgroundColor: COMPANY_BLUE, borderColor: COMPANY_BLUE }}
                             >
                                 Save Changes
                             </Button>
@@ -220,5 +250,5 @@ export default function NewsPageEdit() {
             </Col>
         </Row>
     </Container>
-);
+  );
 }

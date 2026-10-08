@@ -8,10 +8,12 @@ export default function CreateAnnouncementModal({
   show,
   handleClose,
   onPostSuccess,
+  defaultCategory = "company_news",
 }) {
   const [postTitle, setPostTitle] = useState("");
   const [postContent, setPostContent] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [category, setCategory] = useState(defaultCategory);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -34,6 +36,7 @@ export default function CreateAnnouncementModal({
       const formData = new FormData();
       formData.append("title", postTitle);
       formData.append("content", postContent);
+      formData.append("category", category);
 
       selectedFiles.forEach((file) => {
         if (file instanceof File) {
@@ -43,12 +46,13 @@ export default function CreateAnnouncementModal({
 
       const res = await api.post("/announcements", formData);
 
-      // ✅ FIX: USE ACTUAL ANNOUNCEMENT OBJECT
+      // USE ACTUAL ANNOUNCEMENT OBJECT
       onPostSuccess(res.data.data);
 
       setPostTitle("");
       setPostContent("");
       setSelectedFiles([]);
+      setCategory(defaultCategory);
       handleClose();
     } catch (err) {
       console.error("Upload failed:", err);
@@ -74,6 +78,21 @@ export default function CreateAnnouncementModal({
           {error && <Alert variant="danger">{error}</Alert>}
 
           <Form onSubmit={handleSubmit}>
+
+            {/* ANNOUNCEMENT CATEGORY */}
+            <Form.Group className="mb-4">
+              <Form.Label>Announcement Category</Form.Label>
+              <Form.Select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                disabled={loading}
+                required
+              >
+                <option value="company_news">Company News</option>
+                <option value="disaster_risk">Disaster Risk Advisories</option>
+              </Form.Select>
+            </Form.Group>
+
             <Form.Group className="mb-4">
               <Form.Label>Announcement Title</Form.Label>
               <Form.Control

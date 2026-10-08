@@ -1,16 +1,24 @@
+
 import React, { useState } from "react";
-import { Navbar, Nav, Container, Modal, Button } from "react-bootstrap";
+import { Navbar, Nav, Container, Modal, Button, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const LOGO_SRC = "/images/LMC-Logo-Wht.png";
 
-const AppNavbar = ({ userRole }) => {
+const AppNavbar = ({
+    userRole,
+    language = "en",
+    onLanguageChange,
+    showLanguageToggle = false
+}) => {
     const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     const isAuthenticated = !!localStorage.getItem("auth_token");
 
     const isSuperAdmin = userRole === "super admin";
     const isAdmin = userRole === "admin";
+
+    const isJapanese = showLanguageToggle && language === "ja";
 
     const handleLogout = () => {
         localStorage.removeItem("auth_token");
@@ -39,12 +47,23 @@ const AppNavbar = ({ userRole }) => {
                         <Nav className="ms-auto" style={{ gap: "20px" }}>
 
                             <Nav.Link as={Link} to="/about" className="nav-hover-link">
-                                About
+                                {isJapanese ? "会社概要" : "About"}
                             </Nav.Link>
 
-                            <Nav.Link as={Link} to="/news" className="nav-hover-link">
-                                News
-                            </Nav.Link>
+                            {/* NEWS DROPDOWN */}
+                            <NavDropdown
+                                title={isJapanese ? "お知らせ" : "News"}
+                                id="news-dropdown"
+                                className="nav-hover-link news-nav-dropdown"
+                            >
+                                <NavDropdown.Item as={Link} to="/news">
+                                    {isJapanese ? "会社ニュース" : "Company News"}
+                                </NavDropdown.Item>
+
+                                <NavDropdown.Item as={Link} to="/news/disaster-risk">
+                                    {isJapanese ? "防災・緊急情報" : "Disaster Risk Advisories"}
+                                </NavDropdown.Item>
+                            </NavDropdown>
 
                             {isSuperAdmin && (
                                 <Nav.Link as={Link} to="/admin/users" className="nav-hover-link">
@@ -69,6 +88,38 @@ const AppNavbar = ({ userRole }) => {
                             )}
 
                         </Nav>
+
+                        {/* PUBLIC LANGUAGE TOGGLE */}
+                        {showLanguageToggle && (
+                            <div
+                                className="lmc-language-toggle"
+                                role="group"
+                                aria-label="Website language"
+                            >
+                                <button
+                                    type="button"
+                                    className={`lmc-language-option ${language === "ja" ? "selected" : ""}`}
+                                    onClick={() => onLanguageChange?.("ja")}
+                                    aria-pressed={language === "ja"}
+                                >
+                                    JAPANESE
+                                </button>
+
+                                <span className="lmc-language-separator" aria-hidden="true">
+                                    |
+                                </span>
+
+                                <button
+                                    type="button"
+                                    className={`lmc-language-option ${language === "en" ? "selected" : ""}`}
+                                    onClick={() => onLanguageChange?.("en")}
+                                    aria-pressed={language === "en"}
+                                >
+                                    ENGLISH
+                                </button>
+                            </div>
+                        )}
+
                     </Navbar.Collapse>
                 </Container>
             </Navbar>

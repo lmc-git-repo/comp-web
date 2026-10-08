@@ -6,7 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Announcement extends Model
 {
-    protected $fillable = ['title', 'content', 'posted_at'];
+    protected $fillable = [
+        'title',
+        'content',
+        'title_ja',
+        'content_ja',
+        'posted_at',
+        'category'
+    ];
 
     protected $casts = [
         'posted_at' => 'datetime',

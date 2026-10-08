@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
@@ -26,10 +27,18 @@ import UserEditPage from './Pages/UserPage/Edit';
 const AppWrapper = () => {
     const location = useLocation();
 
-    /* -------------------------------------------------------
-       🔥 SOLUTION 1 — AUTO LOGOUT ON SYSTEM START (ONLY ONCE)
-       Ensures login page always appears when running system
-    -------------------------------------------------------- */
+    // PUBLIC WEBSITE LANGUAGE ONLY
+    const [language, setLanguage] = useState(() => {
+        return localStorage.getItem("lmc_public_language") === "ja" ? "ja" : "en";
+    });
+
+    const changeLanguage = (selectedLanguage) => {
+        if (selectedLanguage !== "en" && selectedLanguage !== "ja") return;
+
+        setLanguage(selectedLanguage);
+        localStorage.setItem("lmc_public_language", selectedLanguage);
+    };
+
     useEffect(() => {
         if (!sessionStorage.getItem("alreadyLoaded")) {
             localStorage.removeItem("auth_token");
@@ -70,11 +79,29 @@ const AppWrapper = () => {
 
     const isLoginPage = location.pathname === "/login";
 
+    // Show language toggle on public pages for visitors only
+    const isPublicPage =
+        location.pathname === "/" ||
+        location.pathname === "/about" ||
+        location.pathname === "/news" ||
+        location.pathname === "/news/disaster-risk" ||
+        /^\/news\/view\/[^/]+$/.test(location.pathname);
+
+    const showLanguageToggle = isPublicPage && !isAuthenticated;
+    const publicLanguage = showLanguageToggle ? language : "en";
+
     return (
         <div className="app-container">
 
             {/* NAVBAR: visible to EVERYONE except login */}
-            {!isLoginPage && <AppNavbar userRole={userRole} />}
+            {!isLoginPage && (
+                <AppNavbar
+                    userRole={userRole}
+                    language={publicLanguage}
+                    onLanguageChange={changeLanguage}
+                    showLanguageToggle={showLanguageToggle}
+                />
+            )}
 
             <main>
                 <Routes>
@@ -90,10 +117,35 @@ const AppWrapper = () => {
                     />
 
                     {/* PUBLIC PAGES — VIEWABLE BY ALL ROLES (INCLUDING MEMBER) */}
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/about" element={<AboutPage />} />
-                    <Route path="/news" element={<NewsPageIndex />} />
-                    <Route path="/news/view/:postId" element={<NewsPageShow />} />
+                    <Route
+                        path="/"
+                        element={<HomePage language={publicLanguage} />}
+                    />
+
+                    <Route
+                        path="/about"
+                        element={<AboutPage language={publicLanguage} />}
+                    />
+
+                    <Route
+                        path="/news"
+                        element={<NewsPageIndex language={publicLanguage} />}
+                    />
+
+                    <Route
+                        path="/news/disaster-risk"
+                        element={
+                            <NewsPageIndex
+                                category="disaster_risk"
+                                language={publicLanguage}
+                            />
+                        }
+                    />
+
+                    <Route
+                        path="/news/view/:postId"
+                        element={<NewsPageShow language={publicLanguage} />}
+                    />
 
                     {/* ADMIN + SUPER ADMIN — MANAGE NEWS */}
                     <Route
@@ -148,7 +200,9 @@ const AppWrapper = () => {
                 </Routes>
             </main>
 
-            {!isLoginPage && <Footer />}
+            {!isLoginPage && (
+                <Footer language={publicLanguage} />
+            )}
         </div>
     );
 };
