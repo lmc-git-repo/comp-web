@@ -61,7 +61,7 @@ const AppNavbar = ({
                                 </NavDropdown.Item>
 
                                 <NavDropdown.Item as={Link} to="/news/disaster-risk">
-                                    {isJapanese ? "防災・緊急情報" : "Disaster Risk Advisories"}
+                                    {isJapanese ? "勧告速報" : "Advisory Bulletin"}
                                 </NavDropdown.Item>
                             </NavDropdown>
 
