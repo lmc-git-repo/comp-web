@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Modal, Form, Button, Alert } from "react-bootstrap";
 import api from "../../api/axios";
@@ -55,8 +56,44 @@ export default function CreateAnnouncementModal({
       setCategory(defaultCategory);
       handleClose();
     } catch (err) {
-      console.error("Upload failed:", err);
-      setError("Upload failed. Please check file size or type.");
+      console.error("Announcement creation failed:", err);
+
+      const responseData = err.response?.data;
+      const validationErrors = responseData?.errors;
+
+      if (validationErrors && typeof validationErrors === "object") {
+        const messages = Object.values(validationErrors)
+          .flat()
+          .filter(Boolean);
+
+        setError(
+          messages.length > 0
+            ? messages.join("\n")
+            : responseData?.message || "Announcement submission failed."
+        );
+      } else if (err.response?.status === 413) {
+        setError(
+          "The uploaded files exceed the production server's request size limit."
+        );
+      } else if (err.response?.status === 401) {
+        setError("Your session has expired. Please log in again.");
+      } else if (err.response?.status === 403) {
+        setError("You do not have permission to post announcements.");
+      } else if (err.response?.status === 500) {
+        setError(
+          "A server error occurred while saving the announcement. Please contact IT support."
+        );
+      } else if (responseData?.message) {
+        setError(responseData.message);
+      } else if (!err.response) {
+        setError(
+          "Unable to connect to the server. Please check your connection."
+        );
+      } else {
+        setError(
+          `Announcement submission failed (HTTP ${err.response.status}).`
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -75,7 +112,11 @@ export default function CreateAnnouncementModal({
 
           <h2 className="edit-title">POST ANNOUNCEMENT</h2>
 
-          {error && <Alert variant="danger">{error}</Alert>}
+          {error && (
+            <Alert variant="danger" style={{ whiteSpace: "pre-line" }}>
+              {error}
+            </Alert>
+          )}
 
           <Form onSubmit={handleSubmit}>
 
